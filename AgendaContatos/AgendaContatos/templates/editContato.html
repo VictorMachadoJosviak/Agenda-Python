@@ -1,0 +1,219 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<style>
+    .mdl-textfield__icon {
+        width: 60px;
+        text-align: center;
+        position: absolute;
+        line-height: 2.8;
+    }
+
+        .mdl-textfield__icon ~ * {
+            margin-left: 48px;
+            width: calc(100% - 48px);
+        }
+</style>
+
+<div ng-app="agenda" ng-controller="ContatoController">
+
+
+
+    <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--1-col">
+            <a id="voltar" href="{{ url_for('home') }}"                  
+                    class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-color-text--white mdl-color--amber">
+                <i class="material-icons">arrow_back</i>
+            </a>
+            <div class="mdl-tooltip" for="voltar">
+               voltar
+            </div>
+
+        </div>
+
+        <div class="mdl-cell mdl-cell--4-col">
+            <i class="material-icons mdl-color-text--grey mdl-textfield__icon">account_circle</i>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="float:right">
+                <input class="mdl-textfield__input" ng-model="pessoa.nome" type="text" id="sample3">
+                <label class="mdl-textfield__label" for="sample3">Digite seu nome</label>
+            </div>
+
+        </div>
+        <div class="mdl-cell mdl-cell--4-col">
+            <i class="material-icons mdl-color-text--grey mdl-textfield__icon">email</i>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" ng-model="pessoa.email" type="email" id="sample3">
+                <label class="mdl-textfield__label" for="sample3">Digite seu email</label>
+            </div>
+
+
+        </div>
+
+        <div class="mdl-cell mdl-cell--3-col">
+            <div style="float:right">
+
+                <button id="delete" ng-click="salvar()"
+                        class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-color-text--white mdl-color--teal">
+                    <i class="material-icons">save</i>
+                </button>
+                <div class="mdl-tooltip" for="delete">
+                    Salvar Contato
+                </div>
+                <button id="limpa" ng-click="resetProps()"
+                        class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-color-text--white mdl-color--blue">
+                    <i class="material-icons">clear_all</i>
+                </button>
+                <div class="mdl-tooltip" for="limpa">
+                    Limpa tuto CHESSUS
+                </div>
+
+                <button id="tt2" ng-click="deletarContato()"
+                        ng-show="btnDeletarVisible"
+                        class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-color-text--white mdl-color--red">
+                    <i class="material-icons">delete</i>
+                </button>
+                <div class="mdl-tooltip" for="tt2">
+                    Excluir Contato
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--1-col"></div>
+        <div class="mdl-cell mdl-cell--6-col">
+            <i class="material-icons mdl-color-text--grey mdl-textfield__icon">account_circle</i>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <select class="mdl-textfield__input" ng-model="idPessoa" ng-change="selectPessoaChange(idPessoa)" id="octane" name="octane">
+
+                    <option  ng-repeat="x in lista" value="{% raw %} {{x.id}} {% endraw %}">
+                        {% raw %}
+                        {{x.nome}}
+                        {% endraw %}
+                    </option>
+
+                </select>
+                <label class="mdl-textfield__label" for="octane">Selecione o contato</label>
+            </div>
+
+
+        </div>
+        <div class="mdl-cell mdl-cell--4-col">
+
+            <i class="material-icons mdl-color-text--grey mdl-textfield__icon">phone</i>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" ng-model="numemroTelefone" type="text" id="sample3">
+                <label class="mdl-textfield__label" for="sample3">Digite o telefone</label>
+            </div>
+
+        </div>
+        <div class="mdl-cell mdl-cell--1-col">
+            <button id="tt3" ng-click="addTelefone()" style="float:right"
+                    class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-color-text--white mdl-color--green">
+                <i class="material-icons">save</i>
+            </button>
+
+            <div class="mdl-tooltip" for="tt3">
+                Salvar telefone
+            </div>
+        </div>
+    </div>
+    <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--1-col"></div>
+            <div class="mdl-cell mdl-cell--3-col">
+                <i class="material-icons mdl-color-text--grey mdl-textfield__icon">map</i>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" ng-blur="buscarCep(cep)" ng-model="cep" type="text" id="sample3">
+                    <label class="mdl-textfield__label" for="sample3">Digite o CEP</label>
+                </div>
+            </div>
+            <div class="mdl-cell mdl-cell--3-col">
+                <i class="material-icons mdl-color-text--grey mdl-textfield__icon">navigation</i>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" ng-model="numero" type="text" id="sample3">
+                    <label class="mdl-textfield__label" for="sample3">Digite o numero</label>
+                </div>
+            </div>
+            <div class="mdl-cell mdl-cell--4-col">
+                <i class="material-icons mdl-color-text--grey mdl-textfield__icon">place</i>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" ng-model="rua" type="text" id="sample3">
+                    <label class="mdl-textfield__label" for="sample3">Digite a rua</label>
+                </div>
+            </div>
+            <div class="mdl-cell mdl-cell--1-col">
+                <button id="tt4" ng-click="addEndereco()" style="float:right"
+                        class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-color-text--white mdl-color--green">
+                    <i class="material-icons">save</i>
+                </button>
+
+                <div class="mdl-tooltip" for="tt4">
+                    Salvar endereco
+                </div>
+            </div>
+        </div>
+ 
+    <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--1-col"></div>
+        <div class="mdl-cell mdl-cell--6-col">
+            <h4>Telefones</h4>
+            <ul class="demo-list-three mdl-list">
+                <li class="mdl-list__item mdl-list__item--three-line" ng-click="carregaTelefone(x)" ng-model="telefoneId" ng-repeat="x in telefones" style="cursor:pointer">
+                    <span class="mdl-list__item-primary-content">
+                        <i class="material-icons mdl-list__item-avatar">person</i>
+                        <span>
+                            {% raw %}
+                            {{ x.numero}}
+                            {% endraw %}
+                        </span>
+                        <span class="mdl-list__item-text-body">
+                            <label>
+                                Telefone
+                            </label>
+                        </span>
+                    </span>
+                    <span class="mdl-list__item-secondary-content">
+                        <a class="mdl-list__item-secondary-action" ng-click="excluirTelefone(x.id)" href="#"><i class="material-icons">delete</i></a>
+                    </span>
+                </li>
+            </ul>
+
+        </div>
+        <div class="mdl-cell mdl-cell--5-col">
+            <h4>Enderecos</h4>
+            <ul class="demo-list-three mdl-list">
+                <li class="mdl-list__item mdl-list__item--three-line" ng-click="carregaEndereco(x)" ng-repeat="x in enderecos" style="cursor:pointer">
+                    <span class="mdl-list__item-primary-content">
+                        <i class="material-icons mdl-list__item-avatar">person</i>
+                        <span>
+                            {% raw %}
+                            {{ x.rua}} -  {{ x.numero}}
+                            {% endraw %}
+                        </span>
+                        <span class="mdl-list__item-text-body">
+                            <label>
+                                {% raw %}
+                                {{x.cep}}
+                                {% endraw %}
+                            </label>
+                        </span>
+                    </span>
+                    <span class="mdl-list__item-secondary-content">
+                        <a class="mdl-list__item-secondary-action" ng-click="excluirEndereco(x.id)" href="#"><i class="material-icons">delete</i></a>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    </div>
+
+
+<script src="../static/Js/angular.min.js"></script>
+<script src="../static/controllers/ContatoController.js"></script>
+
+{% endblock %}

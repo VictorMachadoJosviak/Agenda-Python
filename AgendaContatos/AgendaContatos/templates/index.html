@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+
+<div  ng-app="agenda" ng-controller="HomeController">
+
+    <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--1-col">
+        </div>
+        <div class="mdl-cell mdl-cell--11-col">
+            <ul class="demo-list-three mdl-list">
+                <li class="mdl-list__item mdl-list__item--three-line" ng-repeat="x in lista">
+                    <span class="mdl-list__item-primary-content">
+                        <i class="material-icons mdl-list__item-avatar">person</i>
+                        <span>
+                            {% raw %}
+                            {{ x.nome}}
+                            {% endraw %}
+                        </span>
+                        <span class="mdl-list__item-text-body">
+                            <label>
+                                {% raw %}
+                                {{x.email}}
+                                {% endraw %}
+                            </label>
+                        </span>
+                    </span>
+                    <span class="mdl-list__item-secondary-content">
+                        <a class="mdl-list__item-secondary-action" href="#" ng-click="deletarContato(x)"><i class="material-icons">delete</i></a>
+                    </span>
+                </li>
+            </ul>
+
+
+        </div>
+    </div>
+
+ 
+</div>
+
+<a href="{{ url_for('contato') }}"
+   id="view-source"
+   class="mdl-button mdl-js-button mdl-button--raised mdl-button--fab mdl-js-ripple-effect mdl-js-ripple-effect mdl-button--colored mdl-color-text--white">
+    <i class="material-icons">add</i>
+</a>
+
+<script src="../static/Js/angular.min.js"></script>
+<script src="../static/controllers/HomeController.js"></script>
+
+{% endblock %}
