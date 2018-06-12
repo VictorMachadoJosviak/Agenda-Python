@@ -82,6 +82,12 @@ def excluirTelefone(idPessoa,idTelefone):
 
 def excluirPessoa(idPessoa):
      session = DBSession();
+     endereco = session.query(Endereco).filter(Endereco.pessoa_id == idPessoa).all()
+     for x in endereco:
+         session.delete(x)
+     telefones = session.query(Telefone).filter(Telefone.pessoa_id == idPessoa).all()
+     for t in telefones:
+         session.delete(t)
      pessoa = session.query(Pessoa).filter(Pessoa.id == idPessoa).first()
      session.delete(pessoa)
      session.commit()
